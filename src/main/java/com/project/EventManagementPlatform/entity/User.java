@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,17 +16,12 @@ import lombok.NonNull;
 
 import java.util.Set;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
 public class User {
-
-    public static final String ROLE_STUDENT = "ROLE_ANONYMOUS";
-    public static final String ROLE_INSTRUCTOR = "ROLE_ORGANIZER";
-    public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    public static final String ROLE_UNREGISTERED = "ROLE_ATTENDEE";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,13 +13,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/css/**").permitAll() // Public pages
+                        .requestMatchers("/register", "/login").anonymous()
+                        .requestMatchers("/css/**", "/home").permitAll() // Public pages
                         .requestMatchers("/logout").authenticated() // Ensure these endpoints are protected
                         .anyRequest().authenticated() // Protect other endpoints
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/hi", true) // Redirect after successful login
+                        .defaultSuccessUrl("/home", true) // Redirect after successful login
                         .permitAll()
                 )
                 .logout(logout -> logout

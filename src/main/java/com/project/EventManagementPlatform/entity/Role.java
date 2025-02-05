@@ -2,8 +2,7 @@ package com.project.EventManagementPlatform.entity;
 
 public enum Role {
 
-    ATTENDEE("ROLE_ATTENDEE"),
-    ORGANIZER("ROLE_ORGANIZER"),
+    REGISTERED("ROLE_REGISTERED"),
     ADMIN("ROLE_ADMIN"),
     ANONYMOUS("ROLE_ANONYMOUS");
 

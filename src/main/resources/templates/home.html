@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: head('Home Page')"></head>
+
+<body class="d-flex flex-column min-vh-100"> <!-- Flexbox applied -->
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container mt-4 flex-grow-1"> <!-- Ensures main content expands -->
+    <h1>Welcome to the Event Management System</h1>
+    <p>Find, create, and manage your events easily.</p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Upcoming Events</h2>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="event : ${events}">
+                    <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h2>Create an Event</h2>
+            <a class="btn btn-primary" th:href="@{/events/create}">Create Event</a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+
+</html>
