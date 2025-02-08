@@ -11,9 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    boolean existsByName(String username);
+    boolean existsByName(String name);
 
-    Optional<User> findByName(String username);
+    boolean existsByNameAndLocation(String name, String location);
+
+    Optional<User> findByName(String name);
+
+    Optional<User> findByNameAndLocation(String name, String location);
+
 
     List<Place> findAll();
 }

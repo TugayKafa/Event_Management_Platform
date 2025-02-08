@@ -38,6 +38,7 @@
       <th>Name</th>
       <th>Max Capacity</th>
       <th>Location</th>
+      <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -46,6 +47,11 @@
       <td th:text="${place.name}"></td>
       <td th:text="${place.maxCapacity}"></td>
       <td th:text="${place.location}"></td>
+
+      <!-- Show "Edit" button only for Admin users -->
+      <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <a th:href="@{/places/{id}(id=${place.id})}" class="btn btn-warning btn-sm">Edit</a>
+      </td>
     </tr>
     </tbody>
   </table>
