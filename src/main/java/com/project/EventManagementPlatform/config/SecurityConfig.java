@@ -14,14 +14,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").anonymous()
-                        .requestMatchers("/css/**", "/home").permitAll() // Public pages
+                        .requestMatchers("/css/**", "/home", "/places", "/").permitAll() // Public pages
+                        .requestMatchers("/places/add").hasAuthority("ROLE_ADMIN") // Admin only
                         .requestMatchers("/logout").authenticated() // Ensure these endpoints are protected
                         .anyRequest().authenticated() // Protect other endpoints
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/home", true) // Redirect after successful login
-                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

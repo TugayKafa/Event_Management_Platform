@@ -6,7 +6,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +25,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @EqualsAndHashCode.Include
     private String username;
     private String password;
@@ -37,13 +37,5 @@ public class User {
     @NotEmpty
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
-
-    //    public User(String username, String password, String firstName, String lastName, String email) {
-    //        this.username = username;
-    //        this.password = password;
-    //        this.firstName = firstName;
-    //        this.lastName = lastName;
-    //        this.email = email;
-    //    }
 }
 

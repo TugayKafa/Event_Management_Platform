@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Add Place')"></head>
+
+<body>
+<header th:replace="fragments/header :: navbar"></header>
+
+<div class="container mt-4" style="flex-grow: 1;">
+    <h2 class="text-center">Add New Place</h2>
+
+    <form action="#" th:action="@{/places/add}" th:object="${place}" method="post">
+        <!-- Place Name -->
+        <div class="form-group">
+            <label for="name">Place Name</label>
+            <input type="text" class="form-control" th:field="*{name}" id="name"/>
+            <div th:if="${#fields.hasErrors('name')}" style="color: red;">
+                <span th:errors="*{name}"></span>
+            </div>
+        </div>
+
+        <!-- Max Capacity -->
+        <div class="form-group">
+            <label for="maxCapacity">Max Capacity</label>
+            <input type="number" class="form-control" th:field="*{maxCapacity}" id="maxCapacity"/>
+            <div th:if="${#fields.hasErrors('maxCapacity')}" style="color: red;">
+                <span th:errors="*{maxCapacity}"></span>
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" class="form-control" th:field="*{location}" id="location"/>
+            <div th:if="${#fields.hasErrors('location')}" style="color: red;">
+                <span th:errors="*{location}"></span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Add Place</button>
+        </div>
+    </form>
+</div>
+
+<footer th:replace="fragments/footer :: footer" class="mt-auto"></footer>
+
+</body>
+</html>

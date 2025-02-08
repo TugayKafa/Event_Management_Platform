@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static org.springframework.validation.BindingResult.MODEL_KEY_PREFIX;
-
 @Controller
 public class AuthController {
     private final UserService userService;
@@ -29,11 +27,6 @@ public class AuthController {
         return "register";
     }
 
-    @GetMapping("/hi")
-    public String hi(Model model) {
-        return "hi";
-    }
-
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
@@ -47,10 +40,5 @@ public class AuthController {
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
-    }
-
-    @GetMapping("/home")
-    public String showHomePage() {
-        return "home";
     }
 }
