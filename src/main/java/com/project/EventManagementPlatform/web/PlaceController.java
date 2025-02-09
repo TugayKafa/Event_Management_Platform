@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,7 +42,20 @@ public class PlaceController {
         return "editPlace";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/{id}")
+    public String updatePlace(@PathVariable Long id, @Valid @ModelAttribute("place") PlaceDto placeDto, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+        if (result.hasErrors()) {
+            return String.format("redirect:/places/%d", id);
+        }
+
+        Place updatePlace = EntityMapper.mapCreateDtoToEntity(placeDto, Place.class);
+        updatePlace.setId(id);
+        placeService.updatePlace(updatePlace);
+
+        return "redirect:/places";
+    }
+
+    @DeleteMapping("/{id}")
     public String deletePlace(@PathVariable Long id) {
         placeService.deletePlace(id);
         return "redirect:/places";

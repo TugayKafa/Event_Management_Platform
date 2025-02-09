@@ -46,6 +46,15 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public Place updatePlace(Place place) {
+        if (placeRepository.findById(place.getId()).isEmpty()) {
+            throw new PlaceNotFoundException();
+        }
+
+        return placeRepository.save(place);
+    }
+
+    @Override
     public Place deletePlace(Long id) {
         placeRepository.deleteById(id);
         return placeRepository.findById(id).orElse(null);

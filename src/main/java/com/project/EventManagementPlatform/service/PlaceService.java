@@ -13,7 +13,7 @@ public interface PlaceService {
 
     Place getPlaceByName(String name);
 
-    //Place updatePlace(PlaceDto place);
+    Place updatePlace(Place place);
 
     Place deletePlace(Long id);
 
