@@ -46,8 +46,9 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public Place deletePlace(Place place) {
-        return null;
+    public Place deletePlace(Long id) {
+        placeRepository.deleteById(id);
+        return placeRepository.findById(id).orElse(null);
     }
 
     @Override

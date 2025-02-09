@@ -15,7 +15,7 @@ public interface PlaceService {
 
     //Place updatePlace(PlaceDto place);
 
-    Place deletePlace(Place place);
+    Place deletePlace(Long id);
 
     List<Place> getAllPlaces();
 }
