@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Login</title>
-    <!--    <link rel="stylesheet" th:href="@{/css/style.css}" /> &lt;!&ndash; Optional for styling &ndash;&gt;-->
-</head>
-<body>
-<h1>Login</h1>
-<form th:action="@{/login}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" placeholder="Enter your username" required />
-    <br />
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" placeholder="Enter your password" required />
-    <br />
-    <!-- Error Message -->
-    <div th:if="${param.error}" style="color: red;">
-        Invalid username or password. Please try again.
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: head('Login')"></head>
+
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container mt-4 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Login</h2>
+            <form th:action="@{/login}" method="post" class="card p-4 shadow-sm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required />
+                </div>
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Invalid username or password. Please try again.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out successfully.
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/register'">Register</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <!-- Logout Message -->
-    <div th:if="${param.logout}" style="color: green;">
-        You have been logged out successfully.
-    </div>
-    <button type="submit" class="button">Login</button>
-    <button type="button" class="button" onclick="window.location.href='/register'">Register</button>
-</form>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
