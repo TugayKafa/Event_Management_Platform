@@ -1,6 +1,7 @@
 package com.project.EventManagementPlatform.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class PlaceDto {
     @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters")
     private String name;
 
+    @Positive(message = "Max capacity must be positive")
     private int maxCapacity;
 
     @NotBlank

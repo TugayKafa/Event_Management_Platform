@@ -1,17 +1,24 @@
 package com.project.EventManagementPlatform.entity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -23,26 +30,19 @@ public class Event {
 
     private String name;
 
-    private int sessions; // This is not the original idea
+    private int sessions;
 
     private int maxParticipants;
 
-    @ManyToOne
+    @ManyToOne()
     private Place place;
 
-    private String organizer; // stores organizer username;
+    @ManyToOne()
+    private User organizer;
 
-    private Set<String> participants; //stores participants usernames;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> participants;
 
-    public Event(String name, int sessions, int maxParticipants, Place place, String organizer) {
-        this.name = name;
-        this.sessions = sessions;
-        this.maxParticipants = maxParticipants;
-        this.place = place;
-        this.organizer = organizer;
-    }
-
-    //@ElementCollection
-    //private List<String> materials = new ArrayList<>();
-
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> materials;
 }

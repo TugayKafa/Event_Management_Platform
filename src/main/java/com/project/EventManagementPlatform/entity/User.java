@@ -6,6 +6,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,5 +39,11 @@ public class User {
     @NotEmpty
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
+
+    @OneToMany(mappedBy = "organizer", fetch = FetchType.LAZY)
+    private Set<Event> organizedEvents;
+
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    private Set<Event> participatingEvents;
 }
 
