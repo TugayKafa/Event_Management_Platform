@@ -2,6 +2,8 @@ package com.project.EventManagementPlatform.service.impl;
 
 import com.project.EventManagementPlatform.dto.EventDto;
 import com.project.EventManagementPlatform.entity.Event;
+import com.project.EventManagementPlatform.exception.EventNotFoundException;
+import com.project.EventManagementPlatform.exception.NotOrganizerException;
 import com.project.EventManagementPlatform.repository.EventRepository;
 import com.project.EventManagementPlatform.service.EventService;
 import com.project.EventManagementPlatform.service.PlaceService;
@@ -57,7 +59,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event deleteEvent(Long id) {
-        return null;
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        if (!event.getOrganizer().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            throw new NotOrganizerException();
+        }
+        eventRepository.deleteById(id);
+
+        return event;
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.project.EventManagementPlatform.web;
 
 import com.project.EventManagementPlatform.dto.EventDto;
 import com.project.EventManagementPlatform.entity.Place;
+import com.project.EventManagementPlatform.exception.EventNotFoundException;
+import com.project.EventManagementPlatform.exception.NotOrganizerException;
 import com.project.EventManagementPlatform.service.EventService;
 import com.project.EventManagementPlatform.service.PlaceService;
 import com.project.EventManagementPlatform.service.UserService;
@@ -10,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +56,20 @@ public class EventController {
         }
 
         eventService.createEvent(eventDto);
+
+        return "redirect:/home";
+    }
+
+    @DeleteMapping("{id}")
+    public String deleteEvent(@PathVariable() Long id) {
+
+        try {
+            eventService.deleteEvent(id);
+        } catch (NotOrganizerException ex) {
+            return "error/403";
+        } catch (EventNotFoundException ex) {
+            return "error/404";
+        }
 
         return "redirect:/home";
     }
