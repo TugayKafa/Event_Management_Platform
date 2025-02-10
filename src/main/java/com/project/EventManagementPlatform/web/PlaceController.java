@@ -69,7 +69,8 @@ public class PlaceController {
     }
 
     @PostMapping("/add")
-    public String addNewPlace(@Valid @ModelAttribute("place") PlaceDto placeDto, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+    public String addNewPlace(@Valid @ModelAttribute("place") PlaceDto placeDto,
+                              BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
             return "addPlace";
         }

@@ -9,11 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -28,17 +33,29 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotBlank
     private String name;
 
-    private int sessions;
+    //@Positive
+    //private int sessions;
 
+    @Positive
     private int maxParticipants;
 
+    @NotNull
     @ManyToOne()
     private Place place;
 
+    @NotNull
     @ManyToOne()
     private User organizer;
+
+    @FutureOrPresent
+    private Date startDate;
+
+    @FutureOrPresent
+    private Date endDate;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<User> participants;
