@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Request Too Large')"></head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container text-center mt-5 flex-grow-1">
+    <h1 class="text-warning">413 - Request Entity Too Large</h1>
+    <p>The file you uploaded is too large. Please upload a smaller file.</p>
+    <a class="btn btn-primary" th:href="@{/home}">Go to Home</a>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
