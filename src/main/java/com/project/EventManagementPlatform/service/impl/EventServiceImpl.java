@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> getAllEvents() {
-        return null;
+        return eventRepository.findAll();
     }
 
     private Event extractEventAttributes(EventDto eventDto) {

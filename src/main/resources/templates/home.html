@@ -11,13 +11,43 @@
     <p>Find, create, and manage your events easily.</p>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h2>Upcoming Events</h2>
-            <ul class="list-group">
-                <li class="list-group-item" th:each="event : ${events}">
-                    <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}"></a>
-                </li>
-            </ul>
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th>Event Name</th>
+                    <th>Organizer</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Location</th>
+                    <th>Available Places</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="event : ${events}">
+                    <td>
+                        <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.name}"></a>
+                    </td>
+                    <td th:text="${event.organizer.username}"></td>
+                    <td th:text="${#dates.format(event.startDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#dates.format(event.endDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${event.place.name}"></td>
+                    <td th:text="${event.maxParticipants - event.participants.size()}"></td>
+                    <td>
+                        <a th:if="${(event.maxParticipants - event.participants.size()) > 0}"
+                           class="btn btn-success"
+                           th:href="@{/events/join/{id}(id=${event.id})}">
+                            Join
+                        </a>
+                        <span th:if="${(event.maxParticipants - event.participants.size()) <= 0}" class="text-danger">
+                                Full
+                            </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="col-md-6">
@@ -29,5 +59,4 @@
 
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
-
 </html>
