@@ -53,7 +53,7 @@ public class EventController {
 
         eventService.createEvent(eventDto);
 
-        return "home";
+        return "redirect:/home";
     }
 
 }

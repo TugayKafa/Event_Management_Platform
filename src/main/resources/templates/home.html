@@ -3,12 +3,17 @@
 
 <head th:replace="fragments/header :: head('Home Page')"></head>
 
-<body class="d-flex flex-column min-vh-100"> <!-- Flexbox applied -->
+<body class="d-flex flex-column min-vh-100">
 <header th:replace="fragments/header :: navbar"></header>
 
-<main class="container mt-4 flex-grow-1"> <!-- Ensures main content expands -->
+<main class="container mt-4 flex-grow-1">
     <h1>Welcome to the Event Management System</h1>
     <p>Find, create, and manage your events easily.</p>
+
+    <!-- Move "Create Event" Button Here for Better Visibility -->
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-primary btn-lg" th:href="@{/events/create}">+ Create Event</a>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -36,23 +41,34 @@
                     <td th:text="${event.place.name}"></td>
                     <td th:text="${event.maxParticipants - event.participants.size()}"></td>
                     <td>
-                        <a th:if="${(event.maxParticipants - event.participants.size()) > 0}"
-                           class="btn btn-success"
-                           th:href="@{/events/join/{id}(id=${event.id})}">
-                            Join
-                        </a>
+                        <!-- Check if user is authenticated -->
+                        <div th:if="${#authorization.expression('isAuthenticated()')}">
+                            <!-- If user is the organizer, show Edit & Delete, hide Join -->
+                            <div th:if="${#authentication.principal.username == event.organizer.username}">
+                                <a class="btn btn-warning" th:href="@{/events/edit/{id}(id=${event.id})}">Edit</a>
+                                <a class="btn btn-danger" th:href="@{/events/delete/{id}(id=${event.id})}">Delete</a>
+                            </div>
+
+                            <!-- Show Join button only if user is NOT the organizer and event is not full -->
+                            <a th:if="${#authentication.principal.username != event.organizer.username && (event.maxParticipants - event.participants.size()) > 0}"
+                               class="btn btn-success"
+                               th:href="@{/events/join/{id}(id=${event.id})}">
+                                Join
+                            </a>
+                        </div>
+
+                        <!-- If user is not authenticated, just show availability -->
+                        <span th:if="${not #authorization.expression('isAuthenticated()') && (event.maxParticipants - event.participants.size()) > 0}" class="text-info">
+                            Available
+                        </span>
+
                         <span th:if="${(event.maxParticipants - event.participants.size()) <= 0}" class="text-danger">
-                                Full
-                            </span>
+                            Full
+                        </span>
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div class="col-md-6">
-            <h2>Create an Event</h2>
-            <a class="btn btn-primary" th:href="@{/events/create}">Create Event</a>
         </div>
     </div>
 </main>
