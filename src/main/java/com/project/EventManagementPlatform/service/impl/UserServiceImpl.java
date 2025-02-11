@@ -1,9 +1,11 @@
 package com.project.EventManagementPlatform.service.impl;
 
 import com.project.EventManagementPlatform.dto.UserDto;
+import com.project.EventManagementPlatform.entity.Event;
 import com.project.EventManagementPlatform.entity.Role;
 import com.project.EventManagementPlatform.entity.User;
 import com.project.EventManagementPlatform.exception.EmailExistException;
+import com.project.EventManagementPlatform.exception.UserNotFoundException;
 import com.project.EventManagementPlatform.exception.UsernameExistException;
 import com.project.EventManagementPlatform.mapper.EntityMapper;
 import com.project.EventManagementPlatform.repository.UserRepository;
@@ -50,26 +52,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(User user) {
-        return null;
-    }
+        for (Event event : user.getParticipatingEvents()) {
+            event.getParticipants().remove(user);
+        }
 
-    @Override
-    public User getUserById(Long id) {
-        return null;
+        userRepository.delete(user);
+        return user;
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        return user;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
-    }
-
-    @Override
-    public List<User> getAllUsersByRole(Role role) {
-        return null;
+        return userRepository.findAll();
     }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Users')"></head>
+
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container mt-4 flex-grow-1">
+    <h2 class="text-center">Users</h2>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <!-- If logged-in user is admin -->
+                <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <!-- Admin sees only one Edit button after his own name -->
+                    <a th:if="${#authentication.principal.username == user.username}"
+                       class="btn btn-info btn-sm"
+                       th:href="@{/users/edit/{username}(username=${user.username})}">Edit</a>
+
+                    <!-- Admin sees Edit button next to every other user -->
+                    <a th:if="${#authentication.principal.username != user.username}"
+                       class="btn btn-warning btn-sm"
+                       th:href="@{/users/edit/{username}(username=${user.username})}">Edit</a>
+                </div>
+
+                <!-- If logged-in user is NOT admin, only show their own edit button -->
+                <a th:if="${#authentication.principal.username == user.username && !#authorization.expression('hasRole(''ADMIN'')')}"
+                   class="btn btn-info btn-sm"
+                   th:href="@{/users/{username}(username=${user.username})}">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
