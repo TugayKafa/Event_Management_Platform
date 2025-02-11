@@ -69,12 +69,36 @@
         </div>
     </div>
 
-    <!-- Materials (Only for Logged Users) -->
-    <div sec:authorize="isAuthenticated()" class="mt-4">
-        <h4>Event Materials</h4>
-        <ul>
-            <li th:each="material : ${event.materials}" th:text="${material}"></li>
-        </ul>
+    <div sec:authorize="isAuthenticated()">
+        <!-- Admin Role Check -->
+        <div sec:authorize="hasRole('ADMIN')">
+            <h4>Event Materials</h4>
+            <ul>
+                <li th:each="material : ${event.materials}">
+                    <a th:href="@{'/events/download/' + ${eventId} + '?materialName=' + ${material}}" th:text="${material}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Check if the user is a participant -->
+        <div th:if="${event.participants.contains(#authentication.principal.username)}">
+            <h4>Event Materials</h4>
+            <ul>
+                <li th:each="material : ${event.materials}">
+                    <a th:href="@{'/events/download/' + ${eventId} + '?materialName=' + ${material}}" th:text="${material}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Check if the user is the organizer -->
+        <div th:if="${#authentication.principal.username == event.organizer}">
+            <h4>Event Materials</h4>
+            <ul>
+                <li th:each="material : ${event.materials}">
+                    <a th:href="@{'/events/download/' + ${eventId} + '?materialName=' + ${material}}" th:text="${material}"></a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- Participants List (Only for Organizer or Admin) -->

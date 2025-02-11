@@ -13,6 +13,8 @@ import com.project.EventManagementPlatform.service.PlaceService;
 import com.project.EventManagementPlatform.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +38,8 @@ import java.util.Set;
 @RequestMapping("/events")
 @Controller
 public class EventController {
+
+    private static final String MATERIALS_DIR = "tmp";
 
     @Autowired
     private PlaceService placeService;
@@ -126,6 +131,8 @@ public class EventController {
             }
             eventDto.setParticipants(usernames);
             eventDto.setMaterials(event.getMaterials());
+            boolean isParticipant = usernames.contains(SecurityContextHolder.getContext().getAuthentication().getName());  // Implement this method to get the logged-in user's username
+            model.addAttribute("isParticipant", isParticipant);
             model.addAttribute("event", eventDto);
             model.addAttribute("places", placeService.getAllPlaces());
             model.addAttribute("eventId", id);
@@ -174,4 +181,21 @@ public class EventController {
         return "redirect:/home";
     }
 
+    @GetMapping("/download/{eventId}")
+    public ResponseEntity<FileSystemResource> downloadMaterial(@PathVariable Long eventId,
+                                                               @RequestParam String materialName) {
+        // Construct the file path
+        String filePath = MATERIALS_DIR + File.separator + materialName;
+
+        File file = new File(filePath);
+        if (file.exists() && !file.isDirectory()) {
+            // Prepare the file for download
+            FileSystemResource resource = new FileSystemResource(file);
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
