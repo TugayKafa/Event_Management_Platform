@@ -62,4 +62,12 @@ public class Event {
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> materials;
+
+    public void addParticipant(User user) {
+        participants.add(user);
+    }
+
+    public void removeParticipant(User user) {
+        participants.remove(user);
+    }
 }

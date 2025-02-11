@@ -7,6 +7,7 @@ import com.project.EventManagementPlatform.entity.Place;
 import com.project.EventManagementPlatform.entity.User;
 import com.project.EventManagementPlatform.exception.EventNotFoundException;
 import com.project.EventManagementPlatform.exception.NotOrganizerException;
+import com.project.EventManagementPlatform.exception.UserNotFoundException;
 import com.project.EventManagementPlatform.service.EventService;
 import com.project.EventManagementPlatform.service.PlaceService;
 import com.project.EventManagementPlatform.service.UserService;
@@ -125,7 +126,7 @@ public class EventController {
         return "editEvent";
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public String deleteEvent(@PathVariable() Long id) {
 
         try {
@@ -133,6 +134,30 @@ public class EventController {
         } catch (NotOrganizerException ex) {
             return "error/403";
         } catch (EventNotFoundException ex) {
+            return "error/404";
+        }
+
+        return "redirect:/home";
+    }
+
+    @PostMapping("/join/{id}")
+    public String joinEventById(@PathVariable Long id) {
+
+        try {
+            eventService.joinEvent(id);
+        } catch (EventNotFoundException | UserNotFoundException ex) {
+            return "error/404";
+        }
+
+        return "redirect:/home";
+    }
+
+    @PostMapping("/leave/{id}")
+    public String leaveEventById(@PathVariable Long id) {
+
+        try {
+            eventService.leaveEvent(id);
+        } catch (EventNotFoundException | UserNotFoundException ex) {
             return "error/404";
         }
 

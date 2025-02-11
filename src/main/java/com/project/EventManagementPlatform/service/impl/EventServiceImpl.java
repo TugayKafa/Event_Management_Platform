@@ -2,9 +2,11 @@ package com.project.EventManagementPlatform.service.impl;
 
 import com.project.EventManagementPlatform.dto.EventDto;
 import com.project.EventManagementPlatform.entity.Event;
+import com.project.EventManagementPlatform.entity.User;
 import com.project.EventManagementPlatform.exception.EventNotFoundException;
 import com.project.EventManagementPlatform.exception.NotOrganizerException;
 import com.project.EventManagementPlatform.exception.PlaceNotFoundException;
+import com.project.EventManagementPlatform.exception.UserNotFoundException;
 import com.project.EventManagementPlatform.repository.EventRepository;
 import com.project.EventManagementPlatform.service.EventService;
 import com.project.EventManagementPlatform.service.PlaceService;
@@ -85,6 +87,37 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    @Override
+    public void joinEvent(Long id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        event.addParticipant(user);
+        eventRepository.save(event);
+    }
+
+    @Override
+    public void leaveEvent(Long id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        event.removeParticipant(user);
+        eventRepository.save(event);
     }
 
     private Event extractEventAttributes(EventDto eventDto) {

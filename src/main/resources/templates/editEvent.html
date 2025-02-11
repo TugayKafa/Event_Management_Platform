@@ -88,6 +88,15 @@
         </div>
     </div>
 
+    <!-- Leave Button (Only for Logged Users who are Participants) -->
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${event.participants.contains(#authentication.principal.username)}" class="mt-4">
+            <form th:action="@{/events/leave/{id}(id=${eventId})}" method="post" class="text-center">
+                <button type="submit" class="btn btn-secondary" onclick="return confirm('Are you sure you want to leave this event?');">Leave Event</button>
+            </form>
+        </div>
+    </div>
+
 </main>
 
 <footer th:replace="fragments/footer :: footer"></footer>

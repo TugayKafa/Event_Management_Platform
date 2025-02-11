@@ -15,4 +15,8 @@ public interface EventService {
     Event deleteEvent(Long id);
 
     List<Event> getAllEvents();
+
+    void joinEvent(Long id);
+
+    void leaveEvent(Long id);
 }

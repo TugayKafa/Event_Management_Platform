@@ -43,8 +43,9 @@
                     <td>
                         <!-- Check if user is authenticated -->
                         <div th:if="${#authorization.expression('isAuthenticated()')}">
-                            <!-- If user is the organizer, show Edit & Delete form, hide Join -->
-                            <div th:if="${#authentication.principal.username == event.organizer.username}">
+                            <!-- If user is an admin and the organizer -->
+                            <div th:if="${#authentication.principal.username == 'admin' or #authentication.principal.username == event.organizer.username}">
+                                <!-- Admin or organizer can Edit & Delete the event, but they cannot join -->
                                 <a class="btn btn-warning" th:href="@{/events/{id}(id=${event.id})}">Edit</a>
                                 <form th:action="@{/events/{id}(id=${event.id})}" method="post" style="display:inline;">
                                     <input type="hidden" name="_method" value="delete"/>
@@ -52,12 +53,16 @@
                                 </form>
                             </div>
 
-                            <!-- Show Join button only if user is NOT the organizer and event is not full -->
-                            <a th:if="${#authentication.principal.username != event.organizer.username && (event.maxParticipants - event.participants.size()) > 0}"
-                               class="btn btn-success"
-                               th:href="@{/events/join/{id}(id=${event.id})}">
-                                Join
-                            </a>
+                            <!-- Show Join button only if user is NOT an admin and the user is NOT the organizer and the event is not full -->
+                            <form th:if="${#authentication.principal.username != 'admin' and #authentication.principal.username != event.organizer.username and (event.maxParticipants - event.participants.size()) > 0}"
+                                  th:action="@{/events/join/{id}(id=${event.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success">Join</button>
+                            </form>
+
+                            <!-- If user is NOT the organizer and event is full, show "Full" -->
+                            <span th:if="${#authentication.principal.username != event.organizer.username && (event.maxParticipants - event.participants.size()) <= 0}" class="text-danger">
+                                Full
+                            </span>
                         </div>
 
                         <!-- If user is not authenticated, just show availability -->
