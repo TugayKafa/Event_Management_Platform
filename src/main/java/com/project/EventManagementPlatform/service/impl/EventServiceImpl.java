@@ -120,6 +120,14 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
     }
 
+    @Override
+    public List<Event> searchEvents(String name, String place, String organizer) {
+        if (name != null && !name.isEmpty()) {
+            return eventRepository.findByNameContainingIgnoreCaseAndPlace_NameContainingIgnoreCaseAndOrganizer_UsernameContainingIgnoreCase(name, place, organizer);
+        }
+        return eventRepository.findAll();
+    }
+
     private Event extractEventAttributes(EventDto eventDto) {
         Event event = new Event();
         event.setName(eventDto.getName());

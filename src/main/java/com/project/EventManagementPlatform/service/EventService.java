@@ -19,4 +19,6 @@ public interface EventService {
     void joinEvent(Long id);
 
     void leaveEvent(Long id);
+
+    List<Event> searchEvents(String name, String place, String organizer);
 }

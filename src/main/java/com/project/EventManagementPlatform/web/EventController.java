@@ -45,6 +45,16 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @GetMapping()
+    public String searchEvents(@RequestParam(required = false) String name,
+                               @RequestParam(required = false) String place,
+                               @RequestParam(required = false) String organizer,
+                               Model model) {
+        List<Event> events = eventService.searchEvents(name, place, organizer);
+        model.addAttribute("events", events);
+        return "findEvents";
+    }
+
     @GetMapping("/create")
     public String loadCreateEventPage(Model model) {
         List<Place> places = placeService.getAllPlaces();

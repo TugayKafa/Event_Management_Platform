@@ -14,7 +14,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login").anonymous()
-                        .requestMatchers("/css/**", "/home", "/places", "/").permitAll() // Public pages
+                        .requestMatchers("/css/**", "/home", "/places", "/", "/events").permitAll() // Public pages
                         .requestMatchers("/places/add").hasAuthority("ROLE_ADMIN") // Admin only
                         .requestMatchers("/places/{id}").hasAuthority("ROLE_ADMIN") // Admin only
                         .requestMatchers("/logout").authenticated() // Ensure these endpoints are protected

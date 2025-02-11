@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Event Search')"></head>
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container mt-4 flex-grow-1">
+    <h2 class="text-center">Search Events</h2>
+
+    <div class="card p-4">
+        <!-- Search Form -->
+        <form th:action="@{/events}" method="get">
+            <div class="form-group">
+                <label for="name">Event Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter event name" th:value="${param.name}" />
+            </div>
+
+            <div class="form-group">
+                <label for="place">Place</label>
+                <input type="text" id="place" name="place" class="form-control" placeholder="Enter place" th:value="${param.place}" />
+            </div>
+
+            <div class="form-group">
+                <label for="organizer">Organizer</label>
+                <input type="text" id="organizer" name="organizer" class="form-control" placeholder="Enter organizer username" th:value="${param.organizer}" />
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-4">
+        <h3 class="text-center">Found Events</h3>
+        <div class="list-group">
+            <!-- Display Events -->
+            <div th:each="event : ${events}" class="list-group-item">
+                <h5 th:text="${event.name}">Event Name</h5>
+                <p th:text="'Place: ' + ${event.place.name}">Place</p> <!-- Fix for displaying the place attribute -->
+                <p th:text="'Organizer: ' + ${event.organizer.username}">Organizer</p> <!-- Display only organizer's username -->
+                <a th:href="@{/events/{id}(id=${event.id})}" class="btn btn-link">View Details</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
