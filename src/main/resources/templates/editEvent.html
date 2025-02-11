@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: head('Edit Event')"></head>
+
+<body class="d-flex flex-column min-vh-100">
+<header th:replace="fragments/header :: navbar"></header>
+
+<main class="container mt-4 flex-grow-1">
+    <h2 class="text-center">Event Details</h2>
+
+    <div class="card p-4">
+        <h3 th:text="${event.name}"></h3>
+        <p><strong>Organizer:</strong> <span th:text="${event.organizer}"></span></p>
+        <p><strong>Start Date:</strong> <span th:text="${#dates.format(event.startDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p><strong>End Date:</strong> <span th:text="${#dates.format(event.endDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p><strong>Location Id:</strong> <span th:text="${event.placeId}"></span></p>
+        <p><strong>Max Participants:</strong> <span th:text="${event.maxParticipants}"></span></p>
+
+        <!-- Edit Form (Only if User is Organizer or Admin) -->
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${#authentication.principal.username == event.organizer or #authorization.expression('hasRole(''ADMIN'')')}">
+                <h4>Edit Event</h4>
+                <!-- Event Update Form -->
+                <form th:action="@{/events/{id}(id=${eventId})}" th:object="${event}" method="post">
+                    <input type="hidden" name="_method" value="put"/>
+
+                    <div class="form-group">
+                        <label for="name">Event Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="startDate" th:field="*{startDate}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="datetime-local" class="form-control" id="endDate" th:field="*{endDate}"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="placeId">Location</label>
+                        <select id="placeId" class="form-control" th:field="*{placeId}">
+                            <option th:each="place : ${places}" th:value="${place.id}" th:text="${place.name} + ', ' + ${place.location} + ', capacity: ' + ${place.maxCapacity}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxParticipants">Max Participants</label>
+                        <input type="number" class="form-control" id="maxParticipants" th:field="*{maxParticipants}"/>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Update Event</button>
+                    </div>
+                </form>
+
+                <!-- Delete Button -->
+                <form th:action="@{/events/{id}(id=${eventId})}" method="post" class="mt-3 text-center">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this event?');">
+                        Delete Event
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materials (Only for Logged Users) -->
+    <div sec:authorize="isAuthenticated()" class="mt-4">
+        <h4>Event Materials</h4>
+        <ul>
+            <li th:each="material : ${event.materials}" th:text="${material}"></li>
+        </ul>
+    </div>
+
+    <!-- Participants List (Only for Organizer or Admin) -->
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${#authentication.principal.username == event.organizer or #authorization.expression('hasRole(''ADMIN'')')}"
+             class="mt-4">
+            <h4>Participants</h4>
+            <ul>
+                <li th:each="participant : ${event.participants}" th:text="${participant}"></li>
+            </ul>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

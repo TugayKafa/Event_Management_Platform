@@ -4,6 +4,7 @@ import com.project.EventManagementPlatform.dto.EventDto;
 import com.project.EventManagementPlatform.entity.Event;
 import com.project.EventManagementPlatform.exception.EventNotFoundException;
 import com.project.EventManagementPlatform.exception.NotOrganizerException;
+import com.project.EventManagementPlatform.exception.PlaceNotFoundException;
 import com.project.EventManagementPlatform.repository.EventRepository;
 import com.project.EventManagementPlatform.service.EventService;
 import com.project.EventManagementPlatform.service.PlaceService;
@@ -49,12 +50,21 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event getEventById(Long id) {
-        return null;
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new EventNotFoundException();
+        }
+
+        return event;
     }
 
     @Override
     public Event updateEvent(Event event) {
-        return null;
+        if (eventRepository.findById(event.getId()).isEmpty()) {
+            throw new PlaceNotFoundException();
+        }
+
+        return eventRepository.save(event);
     }
 
     @Override
