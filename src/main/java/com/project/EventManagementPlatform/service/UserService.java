@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     User createUser(UserDto user);
 
-    User updateUser(UserDto user);
+    User updateUser(User user);
 
     User deleteUser(User user);
 

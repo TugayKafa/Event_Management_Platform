@@ -1,6 +1,7 @@
 package com.project.EventManagementPlatform.web;
 
 import com.project.EventManagementPlatform.dto.ShowUserInformationDto;
+import com.project.EventManagementPlatform.dto.UserUpdateDto;
 import com.project.EventManagementPlatform.entity.Role;
 import com.project.EventManagementPlatform.entity.User;
 import com.project.EventManagementPlatform.exception.UserNotFoundException;
@@ -8,6 +9,7 @@ import com.project.EventManagementPlatform.mapper.EntityMapper;
 import com.project.EventManagementPlatform.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -37,6 +41,21 @@ public class UsersController {
         }
         model.addAttribute("users", users);
         return "users";
+    }
+
+    @PutMapping("{username}")
+    public String updateUserData(@PathVariable String username, @Valid @ModelAttribute UserUpdateDto userUpdateDto, Model model) {
+        try {
+            User user = userService.getUserByUsername(username);
+            user.setFirstName(userUpdateDto.getFirstName());
+            user.setLastName(userUpdateDto.getLastName());
+            user.setEmail(userUpdateDto.getEmail());
+            userService.updateUser(user);
+            model.addAttribute("user", user);
+            return "redirect:/users/" + user.getUsername();
+        } catch (UserNotFoundException ex) {
+            return "error/404";
+        }
     }
 
     @GetMapping("{username}")
